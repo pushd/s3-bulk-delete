@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	aws "github.com/aws/aws-sdk-go/aws"
-	session "github.com/aws/aws-sdk-go/aws/session"
-	s3 "github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 )
 
 type S3Deleter struct {
@@ -68,7 +68,7 @@ func (d *S3Deleter) DeleteKeys(keys []string) error {
 func (_ *S3Deleter) newBatchError(errs []*s3.Error) error {
 	msgs := make([]string, len(errs))
 	for i := 0; i < len(errs); i += 1 {
-		msgs[i] = *errs[i].Message
+		msgs[i] = fmt.Sprint("%s, %s", *errs[i].Key, *errs[i].Message)
 	}
 	return NewBatchError(msgs)
 }
